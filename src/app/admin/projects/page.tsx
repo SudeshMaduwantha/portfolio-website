@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { getAllProjects } from "@/lib/actions";
 import { Plus, Edit, ExternalLink, Github, Star } from "lucide-react";
