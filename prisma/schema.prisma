@@ -1,0 +1,88 @@
+// Prisma schema for Sudesh Kumarasiri Portfolio
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id           String   @id @default(cuid())
+  title        String
+  slug         String   @unique
+  description  String
+  longDesc     String?  @db.Text
+  techStack    String[]
+  imageUrl     String?
+  images       String[]
+  githubUrl    String?
+  liveUrl      String?
+  featured     Boolean  @default(false)
+  category     String   @default("fullstack")
+  status       String   @default("completed")
+  problem      String?  @db.Text
+  solution     String?  @db.Text
+  architecture String?  @db.Text
+  source       String?  @default("manual")  // "manual" | "github"
+  githubStars  Int?     @default(0)
+  language     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Teaching {
+  id          String   @id @default(cuid())
+  title       String
+  type        String
+  description String
+  thumbnail   String?
+  url         String?
+  students    Int      @default(0)
+  duration    String?
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String   @db.Text
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Profile {
+  id              String   @id @default("main")
+  name            String   @default("Sudesh Kumarasiri")
+  title           String   @default("Full-Stack & AI Engineer")
+  bio             String   @default("") @db.Text
+  email           String   @default("")
+  phone           String   @default("")
+  github          String   @default("https://github.com/SudeshMaduwantha")
+  youtube         String   @default("https://youtube.com/@dktechpvtltd2131")
+  linkedin        String   @default("")
+  location        String   @default("Sri Lanka")
+  cvUrl           String   @default("")
+  adminUsername   String   @default("admin")
+  adminPassword   String   @default("")
+  updatedAt       DateTime @updatedAt
+}
+
+model ClientSite {
+  id          String   @id @default(cuid())
+  name        String
+  url         String
+  description String   @default("")
+  category    String   @default("Web Development")
+  techStack   String[]
+  published   Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
