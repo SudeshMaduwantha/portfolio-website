@@ -4,6 +4,10 @@ import { syncGitHubProjects } from "@/lib/github-sync";
 import { ProjectCard } from "@/components/ProjectCard";
 import { AnimatedSection } from "@/components/AnimatedSection";
 
+// Always run on every request — never use Vercel's cached static version
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Projects",
   description:

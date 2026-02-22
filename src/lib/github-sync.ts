@@ -94,7 +94,7 @@ export async function syncGitHubProjects(username = "SudeshMaduwantha") {
           Accept: "application/vnd.github+json",
           "X-GitHub-Api-Version": "2022-11-28",
         },
-        next: { revalidate: 3600 }, // cache for 1 hour
+        cache: "no-store", // always fetch fresh — no caching
       }
     );
 
@@ -104,7 +104,8 @@ export async function syncGitHubProjects(username = "SudeshMaduwantha") {
     }
 
     const repos: GitHubRepo[] = await res.json();
-    const filtered = repos.filter((r) => !r.fork && !r.private);
+    const EXCLUDED = ["portfolio-website", "SudeshMaduwantha"]; // exclude portfolio + profile repos
+    const filtered = repos.filter((r) => !r.fork && !r.private && !EXCLUDED.includes(r.name));
 
     let synced = 0;
     for (const repo of filtered) {

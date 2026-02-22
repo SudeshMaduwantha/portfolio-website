@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getAllProjects } from "@/lib/actions";
 import { prisma } from "@/lib/prisma";
+import { GitHubSyncButton } from "@/components/GitHubSyncButton";
 import {
   FolderOpen,
   Plus,
@@ -82,6 +83,11 @@ export default async function AdminDashboard() {
           </div>
           <ArrowRight size={16} className="text-neutral-400 group-hover:translate-x-1 transition-transform" />
         </Link>
+
+        {/* GitHub Sync — full width */}
+        <div className="sm:col-span-2">
+          <GitHubSyncButton />
+        </div>
       </div>
 
       {/* Recent Messages */}
