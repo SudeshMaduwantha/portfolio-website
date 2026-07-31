@@ -3,9 +3,11 @@ import { getAllProjects } from "@/lib/actions";
 import { ProjectCard } from "@/components/ProjectCard";
 import { AnimatedSection } from "@/components/AnimatedSection";
 
-// Always run on every request — never use Vercel's cached static version
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+// Cache the rendered page instead of hitting the DB on every visit.
+// Admin edits and GitHub syncs call revalidatePath("/projects") to bust
+// this cache on demand, so content never goes stale — this only removes
+// the round-trip a fully dynamic page pays on every single request.
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Projects",

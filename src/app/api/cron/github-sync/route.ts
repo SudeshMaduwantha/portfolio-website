@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { syncGitHubProjects } from "@/lib/github-sync";
 
 export const dynamic = "force-dynamic";
@@ -19,5 +20,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error }, { status: 500 });
   }
 
+  revalidatePath("/projects");
   return NextResponse.json({ success: true, synced });
 }

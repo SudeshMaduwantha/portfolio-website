@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/auth";
 import { syncGitHubProjects } from "@/lib/github-sync";
 
@@ -15,5 +16,6 @@ export async function POST() {
     return NextResponse.json({ error }, { status: 500 });
   }
 
+  revalidatePath("/projects");
   return NextResponse.json({ success: true, synced });
 }
