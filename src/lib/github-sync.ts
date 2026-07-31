@@ -87,13 +87,21 @@ function getTechStack(repo: GitHubRepo): string[] {
 
 export async function syncGitHubProjects(username = "SudeshMaduwantha") {
   try {
+    const headers: Record<string, string> = {
+      Accept: "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+    };
+    // Unauthenticated GitHub API calls are capped at 60 req/hour per IP, which
+    // Vercel's shared serverless IPs burn through fast. A token (no scopes
+    // needed, just "public_repo" read) raises that to 5000/hour.
+    if (process.env.GITHUB_TOKEN) {
+      headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+    }
+
     const res = await fetch(
       `https://api.github.com/users/${username}/repos?per_page=100&sort=updated`,
       {
-        headers: {
-          Accept: "application/vnd.github+json",
-          "X-GitHub-Api-Version": "2022-11-28",
-        },
+        headers,
         cache: "no-store", // always fetch fresh — no caching
       }
     );

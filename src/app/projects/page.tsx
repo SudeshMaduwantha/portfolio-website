@@ -1,6 +1,5 @@
 ﻿import { Metadata } from "next";
 import { getAllProjects } from "@/lib/actions";
-import { syncGitHubProjects } from "@/lib/github-sync";
 import { ProjectCard } from "@/components/ProjectCard";
 import { AnimatedSection } from "@/components/AnimatedSection";
 
@@ -36,13 +35,8 @@ const categoryColors: Record<string, string> = {
 };
 
 export default async function ProjectsPage() {
-  // Auto-sync GitHub repos on every page load
-  try {
-    await syncGitHubProjects();
-  } catch {
-    // Silently fail if GitHub API is unavailable
-  }
-
+  // GitHub repos are kept in sync by a background cron job (see /api/cron/github-sync)
+  // and the manual "Sync" button in /admin — never block the page render on GitHub's API.
   const projects = await getAllProjects().catch(() => []);
 
   // Group projects by category
