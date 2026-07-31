@@ -122,18 +122,33 @@ export async function syncGitHubProjects(username = "SudeshMaduwantha") {
       const techStack = getTechStack(repo);
       const category = categorizeRepo(repo);
 
+      // Projects with a hand-written case study (problem filled in via the
+      // admin panel) keep their curated description/techStack/category —
+      // only refresh the metrics GitHub actually owns.
+      const existing = await prisma.project.findUnique({
+        where: { slug },
+        select: { problem: true },
+      });
+      const isCurated = !!existing?.problem;
+
       await prisma.project.upsert({
         where: { slug },
-        update: {
-          description,
-          techStack,
-          githubUrl: repo.html_url,
-          liveUrl: repo.homepage || undefined,
-          language: repo.language,
-          category,
-          source: "github",
-          githubStars: repo.stargazers_count,
-        },
+        update: isCurated
+          ? {
+              githubUrl: repo.html_url,
+              liveUrl: repo.homepage || undefined,
+              githubStars: repo.stargazers_count,
+            }
+          : {
+              description,
+              techStack,
+              githubUrl: repo.html_url,
+              liveUrl: repo.homepage || undefined,
+              language: repo.language,
+              category,
+              source: "github",
+              githubStars: repo.stargazers_count,
+            },
         create: {
           title: repo.name
             .replace(/-/g, " ")
